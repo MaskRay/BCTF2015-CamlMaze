@@ -1,5 +1,5 @@
-let nsub = 2;;
-let size = 2;;
+let nsub = 5;;
+let size = 5;;
 let n = nsub * size;;
 
 (*let output_char = output_char stdout;;*)
@@ -16,7 +16,7 @@ output_string "You need to input: drdrdrdd\n";;
 
 let nl () = output_char '\n';;
 
-send_string "3\n";;
+send_string "5\n";;
 
 let r = Array.make n [||];;
 let d = Array.make n [||];;

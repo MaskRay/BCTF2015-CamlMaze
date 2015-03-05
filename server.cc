@@ -15,7 +15,7 @@ using namespace std;
 #define REP(i, n) FOR(i, 0, n)
 
 const char FLAG[] = "meowmeowmeowilikeperfectmaze";
-const int NSUB = 2, SIZE = 2;
+const int NSUB = 5, SIZE = 5;
 const int N = NSUB * SIZE;
 bool R[N][N], D[N][N], v[N][N], e[N][N];
 

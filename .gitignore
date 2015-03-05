@@ -1,4 +1,5 @@
 *.zo
 *.out
 /server
-/client
+/bytecode
+*.tgz
