@@ -18,7 +18,7 @@ read = ->h,re,*noout {
 
 FileUtils.cp 'bytecode', '/tmp/bytecode'
 File.open '/tmp/bytecode', 'r+b' do |h|
-  h.seek 3078
+  h.seek 3542
   h.write "25\n\1"
 end
 

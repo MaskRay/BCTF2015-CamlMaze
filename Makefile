@@ -1,6 +1,6 @@
-.PHONY: all test clean force submit dist
+.PHONY: all test clean force dist
 CXXFLAGS += -g3 -std=c++1y
-P := server client
+P := server *.tgz
 
 # camlrun
 C := $(addprefix runtime/,main.c compare.c error.c instruct.c io.c main.c prim.c str.c)

@@ -1,6 +1,20 @@
-let nsub = 5;;
-let size = 5;;
-let n = nsub * size;;
+let nsub = 5
+let size = 5
+let n = nsub * size
+let m = "5\n"
+let nl () = output_char '\n'
+let int_of_str s =
+  let rec go i x =
+    if i < String.length s && '0' <= s.[i] && s.[i] <= '9' then
+      go (i+1) (x * 10 + Obj.magic s.[i] - 48)
+    else
+      x
+  in
+  go 0 0
+
+let r = Array.make n [||]
+let d = Array.make n [||]
+let e = Array.make n [||];;
 
 (*let output_char = output_char stdout;;*)
 (*let output_string = output_string stdout;;*)
@@ -12,15 +26,9 @@ output_string "| |_. | |\n";
 output_string "| . |_. |\n";
 output_string "|_|_._. |\n";
 output_string "       $ \n";;
-output_string "You need to input: drdrdrdd\n";;
+output_string "You need to input: drdrdrdd\n";
 
-let nl () = output_char '\n';;
-
-send_string "5\n";;
-
-let r = Array.make n [||];;
-let d = Array.make n [||];;
-let e = Array.make n [||];;
+send_string m;
 
 for x = 0 to n-1 do
   r.(x) <- Array.make n false;
@@ -51,9 +59,24 @@ for x = 0 to n-1 do
     else
       ' ');
 done;
+let cnt () =
+  let rec go s x y =
+    if y = n then
+      go s (x+1) 0
+    else if x = n then
+      s
+    else
+      go (if e.(x).(y) then s+1 else s) x (y+1)
+  in
+  go 0 0 0
+in
+if cnt() <> int_of_str m * nsub * nsub then (
+  output_string "I find your trick... I'm tamper-resistant!";
+  let _ = 0/0 in ()
+);
+
 output_char (if e.(0).(n-1) then '.' else ' ');
 nl();
-
 for x = 0 to n-1 do
   output_char (if e.(x).(0) || e.(x).(1) then '|' else ' ');
   for y = 0 to n-1 do
