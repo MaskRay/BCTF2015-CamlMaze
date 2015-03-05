@@ -13,6 +13,7 @@ using namespace std;
 
 #define FOR(i, a, b) for (int i = (a); i < (b); i++)
 #define REP(i, n) FOR(i, 0, n)
+const int TIMEOUT = 5;
 
 const char FLAG[] = "meowmeowmeowilikeperfectmaze";
 const int NSUB = 5, SIZE = 5;
@@ -59,7 +60,7 @@ int main()
 {
   srand(time(NULL));
   char buf[4096];
-  //alarm(5);
+  alarm(TIMEOUT);
 
   // generate maze
   recursive_backtracking(0, 0);

@@ -1,11 +1,11 @@
-.PHONY: all test clean force submit
+.PHONY: all test clean force submit dist
 CXXFLAGS += -g3 -std=c++1y
 P := server client
 
 # camlrun
 C := $(addprefix runtime/,main.c compare.c error.c instruct.c io.c main.c prim.c str.c)
 
-all: server CamlFeatherweight/camlfwc bytecode
+all: server CamlFeatherweight/camlfwc bytecode user.tgz
 
 # server
 server: server.cc
@@ -26,10 +26,14 @@ runtime/instruct.c: runtime/instruct.h
 bytecode: CamlFeatherweight/camlfwc client.ml
 	CamlFeatherweight/camlfwc client.ml -o $@
 
-# submit
+# for user
 
-submit: CamlFeatherweight/camlfwrun CamlFeatherweight/camlfwod bytecode
-	tar zcf submit.tgz --transform 's,CamlFeatherweight/,,' $^
+user.tgz: CamlFeatherweight/camlfwrun CamlFeatherweight/camlfwod bytecode
+	tar zcf $@ --transform 's,CamlFeatherweight/,,' $^
+
+# dist
+dist:
+	git archive --format=tgz HEAD -o dist.tgz
 
 # poc
 poc: poc.cc
