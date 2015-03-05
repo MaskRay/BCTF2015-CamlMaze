@@ -29,6 +29,7 @@ bytecode: CamlFeatherweight/camlfwc client.ml
 # for user
 
 user.tgz: CamlFeatherweight/camlfwrun CamlFeatherweight/camlfwod bytecode
+	strip -s $<
 	tar zcf $@ --transform 's,CamlFeatherweight/,,' $^
 
 # dist
