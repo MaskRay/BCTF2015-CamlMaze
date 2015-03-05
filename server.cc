@@ -104,7 +104,6 @@ int main()
     fputc('\n', stderr);
   }
   fprintf(stderr, "%*s$\n", 2*N-1, "");
-  fflush(stderr);
 #endif
 
   // send maze

@@ -85,7 +85,7 @@ for i = 0 to 2*n-2 do
 done;
 output_char '$';
 
-output_string "\nHint: you need to get more snippets to restore the whold map\n";;
+output_string "\nHint: you need to see more to escape\n";;
 output_string "\nPath?\n";;
 
 let buf = String.make 100000 '.' in
@@ -104,6 +104,7 @@ let rec read i =
     done;
     s.[i] <- '\n';
     output_string s;
+    output_char '\n';
     s
   )
 in
@@ -112,7 +113,7 @@ let s = read 0 in
 send_string s;
 
 let rec read () =
-  let c = input_char() in
+  let c = recv_char() in
   output_char c;
   if c <> '\n' then
     read()
