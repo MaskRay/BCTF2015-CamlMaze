@@ -13,7 +13,8 @@ using namespace std;
 #define FOR(i, a, b) for (int i = (a); i < (b); i++)
 #define REP(i, n) FOR(i, 0, n)
 
-const int NSUB = 5, SIZE = 4;
+const char FLAG[] = "meowmeowmeowilikeperfectmaze";
+const int NSUB = 2, SIZE = 2;
 const int N = NSUB * SIZE;
 bool R[N][N], D[N][N], v[N][N], e[N][N];
 
@@ -22,7 +23,7 @@ void read(char *buf, int size)
   fgets(buf, size, stdin);
   size_t len = strlen(buf);
   while (len && isspace(buf[len-1]))
-    len--;
+    buf[--len] = '\0';
 }
 
 int to_int(const char *s)
@@ -38,11 +39,11 @@ int to_int(const char *s)
 void recursive_backtracking(int r, int c)
 {
   int d = rand()%4, dd = rand()%2 ? 1 : 3;
+  v[r][c] = true;
   REP(i, 4) {
     int rr = r+(int[]){-1,0,1,0}[d],
         cc = c+(int[]){0,1,0,-1}[d];
     if (unsigned(rr) < N && unsigned(cc) < N && ! v[rr][cc]) {
-      v[rr][cc] = true;
       if (d%2)
         R[r][c-(d==3)] = true;
       else
@@ -58,6 +59,8 @@ int main()
   srand(time(NULL));
   char buf[4096];
   //alarm(5);
+
+  // generate maze
   recursive_backtracking(0, 0);
   D[N-1][N-1] = true;
 
@@ -91,7 +94,7 @@ int main()
     putchar(e[0][c] || c && e[0][c-1] ? '.' : ' ');
     printf(e[0][c] ? c ? "_" : "@" : " ");
   }
-  puts(e[0][NSUB-1] ? "." : " ");
+  puts(e[0][N-1] ? "." : " ");
   REP(r, N) {
     putchar(e[r][0] || e[r][1] ? '|' : ' ');
     REP(c, N) {
@@ -102,6 +105,50 @@ int main()
   }
   printf("%*s$\n", 2*N-1, "");
 
+  // send maze
+  REP(r, N)
+    REP(c, N)
+      putchar(R[r][c] ? '1' : '0');
+  REP(r, N)
+    REP(c, N)
+      putchar(D[r][c] ? '1' : '0');
+  REP(r, N)
+    REP(c, N)
+      putchar(e[r][c] ? '1' : '0');
+
+  // get path
   read(buf, sizeof buf);
-  int x = to_int(buf);
+
+  int r = -1, c = 0;
+  for (char *p = buf; *p; p++) {
+    int rr, cc;
+    switch (*p) {
+    case 'u':
+      rr = r-1, cc = c;
+      break;
+    case 'r':
+      rr = r, cc = c+1;
+      break;
+    case 'd':
+      rr = r+1, cc = c;
+      break;
+    case 'l':
+      rr = r, cc = c-1;
+      break;
+    default:
+      puts("Invalid action");
+      return 0;
+    }
+    if ((unsigned(rr) < N && unsigned(cc) < N || rr == N && cc == N-1) &&
+        (rr == r ? r == -1 || R[r][min(c,cc)] : D[min(r,rr)][c]))
+      r = rr, c = cc;
+    else {
+      puts("Hit the wall");
+      return 0;
+    }
+  }
+  if (r == N && c == N-1) {
+    printf("Victory! The flag is: %s\n", FLAG);
+  } else
+    puts("Failed");
 }
