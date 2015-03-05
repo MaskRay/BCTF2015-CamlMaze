@@ -1,13 +1,14 @@
-#include <unistd.h>
 #include <algorithm>
-#include <ctime>
+#include <cctype>
 #include <climits>
+#include <cstdio>
 #include <cstdlib>
+#include <cstring>
+#include <ctime>
 #include <errno.h>
 #include <sysexits.h>
-#include <cctype>
-#include <cstring>
-#include <cstdio>
+#include <unistd.h>
+#include <vector>
 using namespace std;
 
 #define FOR(i, a, b) for (int i = (a); i < (b); i++)
@@ -65,9 +66,7 @@ int main()
   D[N-1][N-1] = true;
 
   // read int
-  //read(buf, sizeof buf);
-  buf[0] = '5';
-  buf[1] = '\0';
+  read(buf, sizeof buf);
   int m = min(to_int(buf), NSUB*NSUB);
   vector<int> es(NSUB*NSUB);
   REP(i, NSUB*NSUB) {
@@ -90,31 +89,34 @@ int main()
   }
 
   // show maze
+#ifdef DEBUG
   REP(c, N) {
-    putchar(e[0][c] || c && e[0][c-1] ? '.' : ' ');
-    printf(e[0][c] ? c ? "_" : "@" : " ");
+    fputc(e[0][c] || c && e[0][c-1] ? '.' : ' ', stderr);
+    fprintf(stderr, e[0][c] ? c ? "_" : "@" : " ");
   }
-  puts(e[0][N-1] ? "." : " ");
+  fputs(e[0][N-1] ? ".\n" : " \n", stderr);
   REP(r, N) {
-    putchar(e[r][0] || e[r][1] ? '|' : ' ');
+    fputc(e[r][0] || e[r][1] ? '|' : ' ', stderr);
     REP(c, N) {
-      putchar(e[r][c] || r+1 < N && e[r+1][c] ? D[r][c] ? ' ' : '_' : '#');
-      putchar(e[r][c] || c+1 < N && e[r][c+1] ? R[r][c] ? '.' : '|' : '#');
+      fputc(e[r][c] || r+1 < N && e[r+1][c] ? D[r][c] ? ' ' : '_' : '#', stderr);
+      fputc(e[r][c] || c+1 < N && e[r][c+1] ? R[r][c] ? '.' : '|' : '#', stderr);
     }
-    putchar('\n');
+    fputc('\n', stderr);
   }
-  printf("%*s$\n", 2*N-1, "");
+  fprintf(stderr, "%*s$\n", 2*N-1, "");
+  fflush(stderr);
+#endif
 
   // send maze
-  REP(r, N)
+  REP(r, N) {
     REP(c, N)
       putchar(R[r][c] ? '1' : '0');
-  REP(r, N)
     REP(c, N)
       putchar(D[r][c] ? '1' : '0');
-  REP(r, N)
     REP(c, N)
       putchar(e[r][c] ? '1' : '0');
+  }
+  fflush(stdout);
 
   // get path
   read(buf, sizeof buf);

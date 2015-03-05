@@ -3,7 +3,7 @@ let size = 2;;
 let n = nsub * size;;
 
 (*let output_char = output_char stdout;;*)
-(*let output_char = output_char stdout;;*)
+(*let output_string = output_string stdout;;*)
 
 output_string "Sample:\n";;
 output_string ".@._._._.\n";
@@ -16,6 +16,8 @@ output_string "You need to input: drdrdrdd\n";;
 
 let nl () = output_char '\n';;
 
+send_string "3\n";;
+
 let r = Array.make n [||];;
 let d = Array.make n [||];;
 let e = Array.make n [||];;
@@ -23,7 +25,16 @@ let e = Array.make n [||];;
 for x = 0 to n-1 do
   r.(x) <- Array.make n false;
   d.(x) <- Array.make n false;
-  e.(x) <- Array.make n true
+  e.(x) <- Array.make n true;
+  for y = 0 to n-1 do
+    r.(x).(y) <- recv_char() <> '0';
+  done;
+  for y = 0 to n-1 do
+    d.(x).(y) <- recv_char() <> '0';
+  done;
+  for y = 0 to n-1 do
+    e.(x).(y) <- recv_char() <> '0';
+  done
 done;
 
 
@@ -74,6 +85,7 @@ for i = 0 to 2*n-2 do
 done;
 output_char '$';
 
+output_string "\nHint: you need to get more snippets to restore the whold map\n";;
 output_string "\nPath?\n";;
 
 let buf = String.make 100000 '.' in
@@ -86,10 +98,23 @@ let rec read i =
     output_string "\nI Will send ";
     output_int i;
     output_string " actions: ";
+    let s = String.make (i+1) '.' in
     for j = 0 to i-1 do
-      output_char buf.[j]
+      s.[j] <- buf.[j]
     done;
-    output_char '\n'
+    s.[i] <- '\n';
+    output_string s;
+    s
   )
 in
-read 0
+
+let s = read 0 in
+send_string s;
+
+let rec read () =
+  let c = input_char() in
+  output_char c;
+  if c <> '\n' then
+    read()
+in
+read()
