@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <cctype>
 #include <climits>
+#include <cstdint>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -17,7 +18,7 @@ const int TIMEOUT = 5;
 
 const char FLAG[] = "meowmeowmeowilikeperfectmaze";
 const int NSUB = 5, SIZE = 5;
-const int N = NSUB * SIZE;
+const int N = NSUB * SIZE, NN = 1024;
 bool R[N][N], D[N][N], v[N][N], e[N][N];
 
 void read(char *buf, int size)
@@ -54,6 +55,41 @@ void recursive_backtracking(int r, int c)
     }
     d = (d+dd)%4;
   }
+}
+
+// positive
+void emit(unsigned x)
+{
+  if (x) {
+    emit(x/2);
+    putchar('0'+x%2);
+  }
+}
+
+void elias_gamma(unsigned x)
+{
+  for (int l = __builtin_ctz(x+1); l--; )
+    putchar('0');
+  emit(x+1);
+}
+
+void emit(bool A[N][N])
+{
+  int8_t a[NN] = {};
+  REP(i, N)
+    REP(j, N)
+      a[i*N+j] = A[i][j];
+  int ldn = __builtin_ctz(NN);
+  for (int m = NN; m; m /= 2) {
+    int mh = m/2;
+    for (int i = 0; i < NN; i += m) {
+      int t1 = i, t2 = i+mh;
+      for (int j = 0; j < mh; j++)
+        a[t2++] ^= a[t1++];
+    }
+  }
+  REP(i, NN)
+    putchar(a[i] ? '1' : '0');
 }
 
 int main()
@@ -108,14 +144,17 @@ int main()
 #endif
 
   // send maze
-  REP(r, N) {
-    REP(c, N)
-      putchar(R[r][c] ? '1' : '0');
-    REP(c, N)
-      putchar(D[r][c] ? '1' : '0');
-    REP(c, N)
-      putchar(e[r][c] ? '1' : '0');
-  }
+  //REP(r, N) {
+  //  REP(c, N)
+  //    putchar(R[r][c] ? '1' : '0');
+  //  REP(c, N)
+  //    putchar(D[r][c] ? '1' : '0');
+  //  REP(c, N)
+  //    putchar(e[r][c] ? '1' : '0');
+  //}
+  emit(R);
+  emit(D);
+  emit(e);
   fflush(stdout);
 
   // get path

@@ -16,6 +16,34 @@ let r = Array.make n [||]
 let d = Array.make n [||]
 let e = Array.make n [||];;
 
+let reed_muller_transform a =
+  for ldm = 10 downto 1 do
+    let m = 1 lsl ldm in
+    let mh = m lsr 1 in
+    let rec go i j =
+      if j = mh then
+        go (i+m) 0
+      else if i < 1024 then (
+        a.(i+j+mh) <- a.(i+j) lxor a.(i+j+mh);
+        go i (j+1)
+      )
+    in
+    go 0 0
+  done
+
+let fetch e =
+  let a = Array.make 1024 0 in
+  for i = 0 to 1023 do
+    a.(i) <- if recv_char() = '0' then 0 else 1
+  done;
+  reed_muller_transform a;
+  for x = 0 to n-1 do
+    e.(x) <- Array.make n true;
+    for y = 0 to n-1 do
+      e.(x).(y) <- a.(x*n+y) <> 0
+    done;
+  done;;
+
 (*let output_char = output_char stdout;;*)
 (*let output_string = output_string stdout;;*)
 
@@ -30,21 +58,23 @@ output_string "You need to input: drdrdrdd\n";
 
 send_string m;
 
-for x = 0 to n-1 do
-  r.(x) <- Array.make n false;
-  d.(x) <- Array.make n false;
-  e.(x) <- Array.make n true;
-  for y = 0 to n-1 do
-    r.(x).(y) <- recv_char() <> '0';
-  done;
-  for y = 0 to n-1 do
-    d.(x).(y) <- recv_char() <> '0';
-  done;
-  for y = 0 to n-1 do
-    e.(x).(y) <- recv_char() <> '0';
-  done
-done;
-
+(*for x = 0 to n-1 do*)
+  (*r.(x) <- Array.make n false;*)
+  (*d.(x) <- Array.make n false;*)
+  (*e.(x) <- Array.make n true;*)
+  (*for y = 0 to n-1 do*)
+    (*r.(x).(y) <- recv_char() <> '0';*)
+  (*done;*)
+  (*for y = 0 to n-1 do*)
+    (*d.(x).(y) <- recv_char() <> '0';*)
+  (*done;*)
+  (*for y = 0 to n-1 do*)
+    (*e.(x).(y) <- recv_char() <> '0';*)
+  (*done*)
+(*done;*)
+fetch r;
+fetch d;
+fetch e;
 
 output_string "\nChallenge:\n";;
 for x = 0 to n-1 do

@@ -12,10 +12,10 @@ server: server.cc
 
 # client
 CamlFeatherweight/camlfwc: force
-	$(MAKE) -C CamlFeatherweight
+	$(MAKE) -C CamlFeatherweight camlfwc
 
-camlfwrun: $(C) $(HD)
-	$(LINK.c) -I runtime $(filter %.c,$^) -o $@
+CamlFeatherweight/camlfwrun: force
+	$(MAKE) -C CamlFeatherweight camlfwrun
 
 runtime/jumptable.h: runtime/instruct.h
 	sed -rn 's/([[:upper:]]+)/\&\&lbl_\1/;T;p' $< > $@

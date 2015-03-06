@@ -1,6 +1,6 @@
 .PHONY: force test
 
-CFLAGS += -std=gnu11 -g3
+CFLAGS += -std=gnu11 -Os -static
 CFLAGS += -m32
 
 SRC := $(wildcard *.ml) lexer.mll parser.mly opcode.ml cprim.ml
