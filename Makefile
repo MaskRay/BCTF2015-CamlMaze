@@ -1,5 +1,5 @@
 .PHONY: all test clean force dist
-CXXFLAGS += -g3 -std=c++1y
+CXXFLAGS += -g3 -static -Os -std=c++1y
 P := server *.tgz
 
 # camlrun
@@ -30,7 +30,7 @@ bytecode: CamlFeatherweight/camlfwc client.ml
 
 user.tgz: CamlFeatherweight/camlfwrun CamlFeatherweight/camlfwod bytecode
 	strip -s $<
-	tar zcf $@ --transform 's,CamlFeatherweight/,,' $^
+	tar zcf $@ -h --transform 's,CamlFeatherweight/,,' $^
 
 # dist
 dist:
